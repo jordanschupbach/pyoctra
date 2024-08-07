@@ -1,6 +1,5 @@
 """
 The pyOctra library.
-
 """
 
 __name__ = "pyoctra"

@@ -58,60 +58,46 @@ class _SwigNonDynamicMeta(type):
     __setattr__ = _swig_setattr_nondynamic_class_variable(type.__setattr__)
 
 
-class octra_dynarray(object):
+class DynArrayInt(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    data = property(_pyoctra.octra_dynarray_data_get, _pyoctra.octra_dynarray_data_set)
-    size = property(_pyoctra.octra_dynarray_size_get, _pyoctra.octra_dynarray_size_set)
-    capacity = property(_pyoctra.octra_dynarray_capacity_get, _pyoctra.octra_dynarray_capacity_set)
-    elementSize = property(_pyoctra.octra_dynarray_elementSize_get, _pyoctra.octra_dynarray_elementSize_set)
+    __swig_destroy__ = _pyoctra.delete_DynArrayInt
 
-    def __init__(self):
-        _pyoctra.octra_dynarray_swiginit(self, _pyoctra.new_octra_dynarray())
-    __swig_destroy__ = _pyoctra.delete_octra_dynarray
+    def push_back(self, *args):
+        return _pyoctra.DynArrayInt_push_back(self, *args)
 
-# Register octra_dynarray in _pyoctra:
-_pyoctra.octra_dynarray_swigregister(octra_dynarray)
+    def clear(self):
+        return _pyoctra.DynArrayInt_clear(self)
 
-def octra_dynarray_alloc(initial_capacity, element_size):
-    return _pyoctra.octra_dynarray_alloc(initial_capacity, element_size)
+    def size(self):
+        return _pyoctra.DynArrayInt_size(self)
 
-def octra_dynarray_reserve(arr, newCapacity):
-    return _pyoctra.octra_dynarray_reserve(arr, newCapacity)
+    def __init__(self, *args):
+        _pyoctra.DynArrayInt_swiginit(self, _pyoctra.new_DynArrayInt(*args))
 
-def octra_dynarray_push(arr, element):
-    return _pyoctra.octra_dynarray_push(arr, element)
+# Register DynArrayInt in _pyoctra:
+_pyoctra.DynArrayInt_swigregister(DynArrayInt)
+class DynArrayDouble(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+    __swig_destroy__ = _pyoctra.delete_DynArrayDouble
 
-def octra_dynarray_insert(_self, index, element):
-    return _pyoctra.octra_dynarray_insert(_self, index, element)
+    def push_back(self, *args):
+        return _pyoctra.DynArrayDouble_push_back(self, *args)
 
-def octra_dynarray_remove(_self, index):
-    return _pyoctra.octra_dynarray_remove(_self, index)
+    def clear(self):
+        return _pyoctra.DynArrayDouble_clear(self)
 
-def octra_dynarray_get(arr, index):
-    return _pyoctra.octra_dynarray_get(arr, index)
+    def size(self):
+        return _pyoctra.DynArrayDouble_size(self)
 
-def octra_dynarray_set(_self, index, element):
-    return _pyoctra.octra_dynarray_set(_self, index, element)
+    def __init__(self, *args):
+        _pyoctra.DynArrayDouble_swiginit(self, _pyoctra.new_DynArrayDouble(*args))
 
-def octra_dynarray_free(arr):
-    return _pyoctra.octra_dynarray_free(arr)
+# Register DynArrayDouble in _pyoctra:
+_pyoctra.DynArrayDouble_swigregister(DynArrayDouble)
 
-def octra_dynarray_print(arr, printFunc):
-    return _pyoctra.octra_dynarray_print(arr, printFunc)
+def __lshift__(*args):
+    return _pyoctra.__lshift__(*args)
 
-def octra_dynarray_size(_self):
-    return _pyoctra.octra_dynarray_size(_self)
-
-def print_int(data):
-    return _pyoctra.print_int(data)
-
-def print_double(data):
-    return _pyoctra.print_double(data)
-
-def octra_dynarray_clear(_self):
-    return _pyoctra.octra_dynarray_clear(_self)
-
-def octra_dynarray_sort(_self, compareFunc):
-    return _pyoctra.octra_dynarray_sort(_self, compareFunc)
 

@@ -3156,12 +3156,13 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 /* -------- TYPES TABLE (BEGIN) -------- */
 
 #define SWIGTYPE_p_char swig_types[0]
-#define SWIGTYPE_p_f_p_q_const__void_p_q_const__void__int swig_types[1]
-#define SWIGTYPE_p_f_p_void__void swig_types[2]
-#define SWIGTYPE_p_octra_dynarray swig_types[3]
-#define SWIGTYPE_p_void swig_types[4]
-static swig_type_info *swig_types[6];
-static swig_module_info swig_module = {swig_types, 5, 0, 0, 0, 0};
+#define SWIGTYPE_p_double swig_types[1]
+#define SWIGTYPE_p_int swig_types[2]
+#define SWIGTYPE_p_octra__DynArrayT_double_t swig_types[3]
+#define SWIGTYPE_p_octra__DynArrayT_int_t swig_types[4]
+#define SWIGTYPE_p_std__ostream swig_types[5]
+static swig_type_info *swig_types[7];
+static swig_module_info swig_module = {swig_types, 6, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -3184,11 +3185,132 @@ static swig_module_info swig_module = {swig_types, 5, 0, 0, 0, 0};
 #endif
 #define SWIG_name    "_pyoctra"
 
-#define SWIG_as_voidptr(a) (void *)((const void *)(a)) 
-#define SWIG_as_voidptrptr(a) ((void)SWIG_as_voidptr(*a),(void**)(a)) 
+#ifdef __cplusplus
+#include <utility>
+/* SwigValueWrapper is described in swig.swg */
+template<typename T> class SwigValueWrapper {
+  struct SwigSmartPointer {
+    T *ptr;
+    SwigSmartPointer(T *p) : ptr(p) { }
+    ~SwigSmartPointer() { delete ptr; }
+    SwigSmartPointer& operator=(SwigSmartPointer& rhs) { T* oldptr = ptr; ptr = 0; delete oldptr; ptr = rhs.ptr; rhs.ptr = 0; return *this; }
+    void reset(T *p) { T* oldptr = ptr; ptr = 0; delete oldptr; ptr = p; }
+  } pointer;
+  SwigValueWrapper& operator=(const SwigValueWrapper<T>& rhs);
+  SwigValueWrapper(const SwigValueWrapper<T>& rhs);
+public:
+  SwigValueWrapper() : pointer(0) { }
+  SwigValueWrapper& operator=(const T& t) { SwigSmartPointer tmp(new T(t)); pointer = tmp; return *this; }
+#if __cplusplus >=201103L
+  SwigValueWrapper& operator=(T&& t) { SwigSmartPointer tmp(new T(std::move(t))); pointer = tmp; return *this; }
+  operator T&&() const { return std::move(*pointer.ptr); }
+#else
+  operator T&() const { return *pointer.ptr; }
+#endif
+  T *operator&() const { return pointer.ptr; }
+  static void reset(SwigValueWrapper& t, T *p) { t.pointer.reset(p); }
+};
+
+/*
+ * SwigValueInit() is a generic initialisation solution as the following approach:
+ * 
+ *       T c_result = T();
+ * 
+ * doesn't compile for all types for example:
+ * 
+ *       unsigned int c_result = unsigned int();
+ */
+template <typename T> T SwigValueInit() {
+  return T();
+}
+
+#if __cplusplus >=201103L
+# define SWIG_STD_MOVE(OBJ) std::move(OBJ)
+#else
+# define SWIG_STD_MOVE(OBJ) OBJ
+#endif
+
+#endif
 
 
-  #include "../../octra/c/dynarray.h"
+#define SWIG_as_voidptr(a) const_cast< void * >(static_cast< const void * >(a)) 
+#define SWIG_as_voidptrptr(a) ((void)SWIG_as_voidptr(*a),reinterpret_cast< void** >(a)) 
+
+
+#include <stdexcept>
+
+
+namespace swig {
+  class SwigPtr_PyObject {
+  protected:
+    PyObject *_obj;
+
+  public:
+    SwigPtr_PyObject() :_obj(0)
+    {
+    }
+
+    SwigPtr_PyObject(const SwigPtr_PyObject& item) : _obj(item._obj)
+    {
+      SWIG_PYTHON_THREAD_BEGIN_BLOCK;
+      Py_XINCREF(_obj);      
+      SWIG_PYTHON_THREAD_END_BLOCK;
+    }
+    
+    SwigPtr_PyObject(PyObject *obj, bool initial_ref = true) :_obj(obj)
+    {
+      if (initial_ref) {
+        SWIG_PYTHON_THREAD_BEGIN_BLOCK;
+        Py_XINCREF(_obj);
+        SWIG_PYTHON_THREAD_END_BLOCK;
+      }
+    }
+    
+    SwigPtr_PyObject & operator=(const SwigPtr_PyObject& item) 
+    {
+      SWIG_PYTHON_THREAD_BEGIN_BLOCK;
+      Py_XINCREF(item._obj);
+      Py_XDECREF(_obj);
+      _obj = item._obj;
+      SWIG_PYTHON_THREAD_END_BLOCK;
+      return *this;      
+    }
+    
+    ~SwigPtr_PyObject() 
+    {
+      SWIG_PYTHON_THREAD_BEGIN_BLOCK;
+      Py_XDECREF(_obj);
+      SWIG_PYTHON_THREAD_END_BLOCK;
+    }
+    
+    operator PyObject *() const
+    {
+      return _obj;
+    }
+
+    PyObject *operator->() const
+    {
+      return _obj;
+    }
+  };
+}
+
+
+namespace swig {
+  struct SwigVar_PyObject : SwigPtr_PyObject {
+    SwigVar_PyObject(PyObject* obj = 0) : SwigPtr_PyObject(obj, false) { }
+    
+    SwigVar_PyObject & operator = (PyObject* obj)
+    {
+      Py_XDECREF(_obj);
+      _obj = obj;
+      return *this;      
+    }
+  };
+}
+
+
+  #include "../octra/cxx/dynarray.hpp"
 
 
 SWIGINTERN int
@@ -3392,16 +3514,83 @@ SWIG_AsVal_size_t (PyObject * obj, size_t *val)
 #endif
     unsigned long v;
     res = SWIG_AsVal_unsigned_SS_long (obj, val ? &v : 0);
-    if (SWIG_IsOK(res) && val) *val = (size_t)(v);
+    if (SWIG_IsOK(res) && val) *val = static_cast< size_t >(v);
 #ifdef SWIG_LONG_LONG_AVAILABLE
   } else if (sizeof(size_t) <= sizeof(unsigned long long)) {
     unsigned long long v;
     res = SWIG_AsVal_unsigned_SS_long_SS_long (obj, val ? &v : 0);
-    if (SWIG_IsOK(res) && val) *val = (size_t)(v);
+    if (SWIG_IsOK(res) && val) *val = static_cast< size_t >(v);
   }
 #endif
   return res;
 }
+
+
+SWIGINTERN int
+SWIG_AsVal_long (PyObject *obj, long* val)
+{
+#if PY_VERSION_HEX < 0x03000000
+  if (PyInt_Check(obj)) {
+    if (val) *val = PyInt_AsLong(obj);
+    return SWIG_OK;
+  } else
+#endif
+  if (PyLong_Check(obj)) {
+    long v = PyLong_AsLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_OK;
+    } else {
+      PyErr_Clear();
+      return SWIG_OverflowError;
+    }
+  }
+#ifdef SWIG_PYTHON_CAST_MODE
+  {
+    int dispatch = 0;
+    long v = PyInt_AsLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_AddCast(SWIG_OK);
+    } else {
+      PyErr_Clear();
+    }
+    if (!dispatch) {
+      double d;
+      int res = SWIG_AddCast(SWIG_AsVal_double (obj,&d));
+      // Largest double not larger than LONG_MAX (not portably calculated easily)
+      // Note that double(LONG_MAX) is stored in a double rounded up by one (for 64-bit long)
+      // 0x7ffffffffffffc00LL == (int64_t)std::nextafter(double(__uint128_t(LONG_MAX)+1), double(0))
+      const double long_max = sizeof(long) == 8 ? 0x7ffffffffffffc00LL : LONG_MAX;
+      // No equivalent needed for 64-bit double(LONG_MIN) is exactly LONG_MIN
+      if (SWIG_IsOK(res) && SWIG_CanCastAsInteger(&d, LONG_MIN, long_max)) {
+	if (val) *val = (long)(d);
+	return res;
+      }
+    }
+  }
+#endif
+  return SWIG_TypeError;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_int (PyObject * obj, int *val)
+{
+  long v;
+  int res = SWIG_AsVal_long (obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v < INT_MIN || v > INT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< int >(v);
+    }
+  }  
+  return res;
+}
+
+
+#include <memory>
 
 
   #define SWIG_From_long   PyInt_FromLong 
@@ -3411,7 +3600,7 @@ SWIGINTERNINLINE PyObject*
 SWIG_From_unsigned_SS_long  (unsigned long value)
 {
   return (value > LONG_MAX) ?
-    PyLong_FromUnsignedLong(value) : PyInt_FromLong((long)(value));
+    PyLong_FromUnsignedLong(value) : PyInt_FromLong(static_cast< long >(value));
 }
 
 
@@ -3420,7 +3609,7 @@ SWIGINTERNINLINE PyObject*
 SWIG_From_unsigned_SS_long_SS_long  (unsigned long long value)
 {
   return (value > LONG_MAX) ?
-    PyLong_FromUnsignedLongLong(value) : PyInt_FromLong((long)(value));
+    PyLong_FromUnsignedLongLong(value) : PyInt_FromLong(static_cast< long >(value));
 }
 #endif
 
@@ -3431,11 +3620,11 @@ SWIG_From_size_t  (size_t value)
 #ifdef SWIG_LONG_LONG_AVAILABLE
   if (sizeof(size_t) <= sizeof(unsigned long)) {
 #endif
-    return SWIG_From_unsigned_SS_long  ((unsigned long)(value));
+    return SWIG_From_unsigned_SS_long  (static_cast< unsigned long >(value));
 #ifdef SWIG_LONG_LONG_AVAILABLE
   } else {
     /* assume sizeof(size_t) <= sizeof(unsigned long long) */
-    return SWIG_From_unsigned_SS_long_SS_long  ((unsigned long long)(value));
+    return SWIG_From_unsigned_SS_long_SS_long  (static_cast< unsigned long long >(value));
   }
 #endif
 }
@@ -3443,27 +3632,113 @@ SWIG_From_size_t  (size_t value)
 #ifdef __cplusplus
 extern "C" {
 #endif
-SWIGINTERN PyObject *_wrap_octra_dynarray_data_set(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_DynArrayInt__SWIG_0(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
-  void *arg2 = (void *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int res2 ;
-  PyObject *swig_obj[2] ;
+  size_t arg1 ;
+  size_t val1 ;
+  int ecode1 = 0 ;
+  octra::DynArray< int > *result = 0 ;
   
   (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "octra_dynarray_data_set", 2, 2, swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_size_t(swig_obj[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_DynArrayInt" "', argument " "1"" of type '" "size_t""'");
+  } 
+  arg1 = static_cast< size_t >(val1);
+  result = (octra::DynArray< int > *)new octra::DynArray< int >(arg1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_octra__DynArrayT_int_t, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_DynArrayInt(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  octra::DynArray< int > *arg1 = (octra::DynArray< int > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra__DynArrayT_int_t, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_data_set" "', argument " "1"" of type '" "octra_dynarray *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_DynArrayInt" "', argument " "1"" of type '" "octra::DynArray< int > *""'"); 
   }
-  arg1 = (octra_dynarray *)(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[1],SWIG_as_voidptrptr(&arg2), 0, SWIG_POINTER_DISOWN);
+  arg1 = reinterpret_cast< octra::DynArray< int > * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DynArrayInt_push_back__SWIG_0(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  octra::DynArray< int > *arg1 = (octra::DynArray< int > *) 0 ;
+  int *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int temp2 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  
+  (void)self;
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra__DynArrayT_int_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DynArrayInt_push_back" "', argument " "1"" of type '" "octra::DynArray< int > *""'"); 
+  }
+  arg1 = reinterpret_cast< octra::DynArray< int > * >(argp1);
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "DynArrayInt_push_back" "', argument " "2"" of type '" "int""'");
+  } 
+  temp2 = static_cast< int >(val2);
+  arg2 = &temp2;
+  (arg1)->push_back((int const &)*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DynArrayInt_push_back__SWIG_1(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  octra::DynArray< int > *arg1 = (octra::DynArray< int > *) 0 ;
+  int *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::unique_ptr< int > rvrdeleter2 ;
+  
+  (void)self;
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra__DynArrayT_int_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DynArrayInt_push_back" "', argument " "1"" of type '" "octra::DynArray< int > *""'"); 
+  }
+  arg1 = reinterpret_cast< octra::DynArray< int > * >(argp1);
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_int, SWIG_POINTER_RELEASE |  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "octra_dynarray_data_set" "', argument " "2"" of type '" "void *""'"); 
+    if (res2 == SWIG_ERROR_RELEASE_NOT_OWNED) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "DynArrayInt_push_back" "', cannot release ownership as memory is not owned for argument " "2"" of type '" "int &&""'");
+    } else {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "DynArrayInt_push_back" "', argument " "2"" of type '" "int &&""'"); 
+    }
   }
-  if (arg1) (arg1)->data = arg2;
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DynArrayInt_push_back" "', argument " "2"" of type '" "int &&""'"); 
+  }
+  arg2 = reinterpret_cast< int * >(argp2);
+  rvrdeleter2.reset(arg2);
+  (arg1)->push_back((int &&)*arg2);
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -3471,53 +3746,69 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_octra_dynarray_data_get(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_DynArrayInt_push_back(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args, "DynArrayInt_push_back", 0, 2, argv))) SWIG_fail;
+  --argc;
+  if (argc == 2) {
+    int _v = 0;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_octra__DynArrayT_int_t, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_int, SWIG_POINTER_NO_NULL);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_DynArrayInt_push_back__SWIG_1(self, argc, argv);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v = 0;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_octra__DynArrayT_int_t, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_DynArrayInt_push_back__SWIG_0(self, argc, argv);
+      }
+    }
+  }
+  
+fail:
+  SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'DynArrayInt_push_back'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    octra::DynArray< int >::push_back(int const &)\n"
+    "    octra::DynArray< int >::push_back(int &&)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_DynArrayInt_clear(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
+  octra::DynArray< int > *arg1 = (octra::DynArray< int > *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject *swig_obj[1] ;
-  void *result = 0 ;
   
   (void)self;
   if (!args) SWIG_fail;
   swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra__DynArrayT_int_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_data_get" "', argument " "1"" of type '" "octra_dynarray *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DynArrayInt_clear" "', argument " "1"" of type '" "octra::DynArray< int > *""'"); 
   }
-  arg1 = (octra_dynarray *)(argp1);
-  result = (void *) ((arg1)->data);
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_void, 0 |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_octra_dynarray_size_set(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
-  size_t arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  size_t val2 ;
-  int ecode2 = 0 ;
-  PyObject *swig_obj[2] ;
-  
-  (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "octra_dynarray_size_set", 2, 2, swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_size_set" "', argument " "1"" of type '" "octra_dynarray *""'"); 
-  }
-  arg1 = (octra_dynarray *)(argp1);
-  ecode2 = SWIG_AsVal_size_t(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "octra_dynarray_size_set" "', argument " "2"" of type '" "size_t""'");
-  } 
-  arg2 = (size_t)(val2);
-  if (arg1) (arg1)->size = arg2;
+  arg1 = reinterpret_cast< octra::DynArray< int > * >(argp1);
+  (arg1)->clear();
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -3525,63 +3816,9 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_octra_dynarray_size_get(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_DynArrayInt_size(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject *swig_obj[1] ;
-  size_t result;
-  
-  (void)self;
-  if (!args) SWIG_fail;
-  swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_size_get" "', argument " "1"" of type '" "octra_dynarray *""'"); 
-  }
-  arg1 = (octra_dynarray *)(argp1);
-  result =  ((arg1)->size);
-  resultobj = SWIG_From_size_t((size_t)(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_octra_dynarray_capacity_set(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
-  size_t arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  size_t val2 ;
-  int ecode2 = 0 ;
-  PyObject *swig_obj[2] ;
-  
-  (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "octra_dynarray_capacity_set", 2, 2, swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_capacity_set" "', argument " "1"" of type '" "octra_dynarray *""'"); 
-  }
-  arg1 = (octra_dynarray *)(argp1);
-  ecode2 = SWIG_AsVal_size_t(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "octra_dynarray_capacity_set" "', argument " "2"" of type '" "size_t""'");
-  } 
-  arg2 = (size_t)(val2);
-  if (arg1) (arg1)->capacity = arg2;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_octra_dynarray_capacity_get(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
+  octra::DynArray< int > *arg1 = (octra::DynArray< int > *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject *swig_obj[1] ;
@@ -3590,346 +3827,198 @@ SWIGINTERN PyObject *_wrap_octra_dynarray_capacity_get(PyObject *self, PyObject 
   (void)self;
   if (!args) SWIG_fail;
   swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra__DynArrayT_int_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_capacity_get" "', argument " "1"" of type '" "octra_dynarray *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DynArrayInt_size" "', argument " "1"" of type '" "octra::DynArray< int > const *""'"); 
   }
-  arg1 = (octra_dynarray *)(argp1);
-  result =  ((arg1)->capacity);
-  resultobj = SWIG_From_size_t((size_t)(result));
+  arg1 = reinterpret_cast< octra::DynArray< int > * >(argp1);
+  result = ((octra::DynArray< int > const *)arg1)->size();
+  resultobj = SWIG_From_size_t(static_cast< size_t >(result));
   return resultobj;
 fail:
   return NULL;
 }
 
 
-SWIGINTERN PyObject *_wrap_octra_dynarray_elementSize_set(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_DynArrayInt__SWIG_1(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
-  size_t arg2 ;
+  octra::DynArray< int > *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  size_t val2 ;
-  int ecode2 = 0 ;
-  PyObject *swig_obj[2] ;
+  octra::DynArray< int > *result = 0 ;
   
   (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "octra_dynarray_elementSize_set", 2, 2, swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_octra__DynArrayT_int_t,  0  | 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_elementSize_set" "', argument " "1"" of type '" "octra_dynarray *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_DynArrayInt" "', argument " "1"" of type '" "octra::DynArray< int > const &""'"); 
   }
-  arg1 = (octra_dynarray *)(argp1);
-  ecode2 = SWIG_AsVal_size_t(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "octra_dynarray_elementSize_set" "', argument " "2"" of type '" "size_t""'");
-  } 
-  arg2 = (size_t)(val2);
-  if (arg1) (arg1)->elementSize = arg2;
-  resultobj = SWIG_Py_Void();
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_DynArrayInt" "', argument " "1"" of type '" "octra::DynArray< int > const &""'"); 
+  }
+  arg1 = reinterpret_cast< octra::DynArray< int > * >(argp1);
+  result = (octra::DynArray< int > *)new octra::DynArray< int >((octra::DynArray< int > const &)*arg1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_octra__DynArrayT_int_t, SWIG_POINTER_NEW |  0 );
   return resultobj;
 fail:
   return NULL;
 }
 
 
-SWIGINTERN PyObject *_wrap_octra_dynarray_elementSize_get(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_DynArrayInt__SWIG_2(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
+  octra::DynArray< int > *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject *swig_obj[1] ;
-  size_t result;
+  std::unique_ptr< octra::DynArray< int > > rvrdeleter1 ;
+  octra::DynArray< int > *result = 0 ;
   
   (void)self;
-  if (!args) SWIG_fail;
-  swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_octra__DynArrayT_int_t, SWIG_POINTER_RELEASE |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_elementSize_get" "', argument " "1"" of type '" "octra_dynarray *""'"); 
+    if (res1 == SWIG_ERROR_RELEASE_NOT_OWNED) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_DynArrayInt" "', cannot release ownership as memory is not owned for argument " "1"" of type '" "octra::DynArray< int > &&""'");
+    } else {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_DynArrayInt" "', argument " "1"" of type '" "octra::DynArray< int > &&""'"); 
+    }
   }
-  arg1 = (octra_dynarray *)(argp1);
-  result =  ((arg1)->elementSize);
-  resultobj = SWIG_From_size_t((size_t)(result));
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_DynArrayInt" "', argument " "1"" of type '" "octra::DynArray< int > &&""'"); 
+  }
+  arg1 = reinterpret_cast< octra::DynArray< int > * >(argp1);
+  rvrdeleter1.reset(arg1);
+  result = (octra::DynArray< int > *)new octra::DynArray< int >((octra::DynArray< int > &&)*arg1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_octra__DynArrayT_int_t, SWIG_POINTER_NEW |  0 );
   return resultobj;
 fail:
   return NULL;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_octra_dynarray(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  octra_dynarray *result = 0 ;
+SWIGINTERN PyObject *_wrap_new_DynArrayInt(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[2] = {
+    0
+  };
   
-  (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "new_octra_dynarray", 0, 0, 0)) SWIG_fail;
-  result = (octra_dynarray *)calloc(1, sizeof(octra_dynarray));
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_octra_dynarray, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  if (!(argc = SWIG_Python_UnpackTuple(args, "new_DynArrayInt", 0, 1, argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    int _v = 0;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_octra__DynArrayT_int_t, SWIG_POINTER_NO_NULL | 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_DynArrayInt__SWIG_1(self, argc, argv);
+    }
+  }
+  if (argc == 1) {
+    int _v = 0;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_octra__DynArrayT_int_t, SWIG_POINTER_NO_NULL);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_DynArrayInt__SWIG_2(self, argc, argv);
+    }
+  }
+  if (argc == 1) {
+    int _v = 0;
+    {
+      int res = SWIG_AsVal_size_t(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      return _wrap_new_DynArrayInt__SWIG_0(self, argc, argv);
+    }
+  }
+  
 fail:
-  return NULL;
+  SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'new_DynArrayInt'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    octra::DynArray< int >::DynArray(size_t)\n"
+    "    octra::DynArray< int >::DynArray(octra::DynArray< int > const &)\n"
+    "    octra::DynArray< int >::DynArray(octra::DynArray< int > &&)\n");
+  return 0;
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_octra_dynarray(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap___lshift____SWIG_1(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
+  std::ostream *arg1 = 0 ;
+  octra::DynArray< int > *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject *swig_obj[1] ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::ostream *result = 0 ;
   
   (void)self;
-  if (!args) SWIG_fail;
-  swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, SWIG_POINTER_DISOWN |  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_std__ostream,  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_octra_dynarray" "', argument " "1"" of type '" "octra_dynarray *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__lshift__" "', argument " "1"" of type '" "std::ostream &""'"); 
   }
-  arg1 = (octra_dynarray *)(argp1);
-  free((char *) arg1);
-  resultobj = SWIG_Py_Void();
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__lshift__" "', argument " "1"" of type '" "std::ostream &""'"); 
+  }
+  arg1 = reinterpret_cast< std::ostream * >(argp1);
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_octra__DynArrayT_int_t,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__lshift__" "', argument " "2"" of type '" "octra::DynArray< int > const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__lshift__" "', argument " "2"" of type '" "octra::DynArray< int > const &""'"); 
+  }
+  arg2 = reinterpret_cast< octra::DynArray< int > * >(argp2);
+  result = (std::ostream *) &operator <<(*arg1,(octra::DynArray< int > const &)*arg2);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__ostream, 0 |  0 );
   return resultobj;
 fail:
-  return NULL;
+  if (PyErr_Occurred() && !PyErr_ExceptionMatches(PyExc_TypeError)) {
+    return NULL;
+  }
+  PyErr_Clear();
+  Py_INCREF(Py_NotImplemented);
+  return Py_NotImplemented;
 }
 
 
-SWIGINTERN PyObject *octra_dynarray_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *DynArrayInt_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *obj;
   if (!SWIG_Python_UnpackTuple(args, "swigregister", 1, 1, &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_octra_dynarray, SWIG_NewClientData(obj));
+  SWIG_TypeNewClientData(SWIGTYPE_p_octra__DynArrayT_int_t, SWIG_NewClientData(obj));
   return SWIG_Py_Void();
 }
 
-SWIGINTERN PyObject *octra_dynarray_swiginit(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *DynArrayInt_swiginit(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   return SWIG_Python_InitShadowInstance(args);
 }
 
-SWIGINTERN PyObject *_wrap_octra_dynarray_alloc(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_DynArrayDouble__SWIG_0(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   size_t arg1 ;
-  size_t arg2 ;
   size_t val1 ;
   int ecode1 = 0 ;
-  size_t val2 ;
-  int ecode2 = 0 ;
-  PyObject *swig_obj[2] ;
-  octra_dynarray *result = 0 ;
+  octra::DynArray< double > *result = 0 ;
   
   (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "octra_dynarray_alloc", 2, 2, swig_obj)) SWIG_fail;
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
   ecode1 = SWIG_AsVal_size_t(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "octra_dynarray_alloc" "', argument " "1"" of type '" "size_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_DynArrayDouble" "', argument " "1"" of type '" "size_t""'");
   } 
-  arg1 = (size_t)(val1);
-  ecode2 = SWIG_AsVal_size_t(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "octra_dynarray_alloc" "', argument " "2"" of type '" "size_t""'");
-  } 
-  arg2 = (size_t)(val2);
-  result = (octra_dynarray *)octra_dynarray_alloc(arg1,arg2);
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_octra_dynarray, 0 |  0 );
+  arg1 = static_cast< size_t >(val1);
+  result = (octra::DynArray< double > *)new octra::DynArray< double >(arg1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_octra__DynArrayT_double_t, SWIG_POINTER_NEW |  0 );
   return resultobj;
 fail:
   return NULL;
 }
 
 
-SWIGINTERN PyObject *_wrap_octra_dynarray_reserve(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_DynArrayDouble(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
-  size_t arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  size_t val2 ;
-  int ecode2 = 0 ;
-  PyObject *swig_obj[2] ;
-  
-  (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "octra_dynarray_reserve", 2, 2, swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_reserve" "', argument " "1"" of type '" "octra_dynarray *""'"); 
-  }
-  arg1 = (octra_dynarray *)(argp1);
-  ecode2 = SWIG_AsVal_size_t(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "octra_dynarray_reserve" "', argument " "2"" of type '" "size_t""'");
-  } 
-  arg2 = (size_t)(val2);
-  octra_dynarray_reserve(arg1,arg2);
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_octra_dynarray_push(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
-  void *arg2 = (void *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int res2 ;
-  PyObject *swig_obj[2] ;
-  
-  (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "octra_dynarray_push", 2, 2, swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_push" "', argument " "1"" of type '" "octra_dynarray *""'"); 
-  }
-  arg1 = (octra_dynarray *)(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[1],SWIG_as_voidptrptr(&arg2), 0, 0);
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "octra_dynarray_push" "', argument " "2"" of type '" "void *""'"); 
-  }
-  octra_dynarray_push(arg1,arg2);
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_octra_dynarray_insert(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
-  size_t arg2 ;
-  void *arg3 = (void *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  size_t val2 ;
-  int ecode2 = 0 ;
-  int res3 ;
-  PyObject *swig_obj[3] ;
-  
-  (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "octra_dynarray_insert", 3, 3, swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_insert" "', argument " "1"" of type '" "octra_dynarray *""'"); 
-  }
-  arg1 = (octra_dynarray *)(argp1);
-  ecode2 = SWIG_AsVal_size_t(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "octra_dynarray_insert" "', argument " "2"" of type '" "size_t""'");
-  } 
-  arg2 = (size_t)(val2);
-  res3 = SWIG_ConvertPtr(swig_obj[2],SWIG_as_voidptrptr(&arg3), 0, 0);
-  if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "octra_dynarray_insert" "', argument " "3"" of type '" "void *""'"); 
-  }
-  octra_dynarray_insert(arg1,arg2,arg3);
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_octra_dynarray_remove(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
-  size_t arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  size_t val2 ;
-  int ecode2 = 0 ;
-  PyObject *swig_obj[2] ;
-  
-  (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "octra_dynarray_remove", 2, 2, swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_remove" "', argument " "1"" of type '" "octra_dynarray *""'"); 
-  }
-  arg1 = (octra_dynarray *)(argp1);
-  ecode2 = SWIG_AsVal_size_t(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "octra_dynarray_remove" "', argument " "2"" of type '" "size_t""'");
-  } 
-  arg2 = (size_t)(val2);
-  octra_dynarray_remove(arg1,arg2);
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_octra_dynarray_get(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
-  size_t arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  size_t val2 ;
-  int ecode2 = 0 ;
-  PyObject *swig_obj[2] ;
-  void *result = 0 ;
-  
-  (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "octra_dynarray_get", 2, 2, swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_get" "', argument " "1"" of type '" "octra_dynarray *""'"); 
-  }
-  arg1 = (octra_dynarray *)(argp1);
-  ecode2 = SWIG_AsVal_size_t(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "octra_dynarray_get" "', argument " "2"" of type '" "size_t""'");
-  } 
-  arg2 = (size_t)(val2);
-  result = (void *)octra_dynarray_get(arg1,arg2);
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_void, 0 |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_octra_dynarray_set(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
-  size_t arg2 ;
-  void *arg3 = (void *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  size_t val2 ;
-  int ecode2 = 0 ;
-  int res3 ;
-  PyObject *swig_obj[3] ;
-  
-  (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "octra_dynarray_set", 3, 3, swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_set" "', argument " "1"" of type '" "octra_dynarray *""'"); 
-  }
-  arg1 = (octra_dynarray *)(argp1);
-  ecode2 = SWIG_AsVal_size_t(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "octra_dynarray_set" "', argument " "2"" of type '" "size_t""'");
-  } 
-  arg2 = (size_t)(val2);
-  res3 = SWIG_ConvertPtr(swig_obj[2],SWIG_as_voidptrptr(&arg3), 0, 0);
-  if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "octra_dynarray_set" "', argument " "3"" of type '" "void *""'"); 
-  }
-  octra_dynarray_set(arg1,arg2,arg3);
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_octra_dynarray_free(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
+  octra::DynArray< double > *arg1 = (octra::DynArray< double > *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject *swig_obj[1] ;
@@ -3937,12 +4026,12 @@ SWIGINTERN PyObject *_wrap_octra_dynarray_free(PyObject *self, PyObject *args) {
   (void)self;
   if (!args) SWIG_fail;
   swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra__DynArrayT_double_t, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_free" "', argument " "1"" of type '" "octra_dynarray *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_DynArrayDouble" "', argument " "1"" of type '" "octra::DynArray< double > *""'"); 
   }
-  arg1 = (octra_dynarray *)(argp1);
-  octra_dynarray_free(arg1);
+  arg1 = reinterpret_cast< octra::DynArray< double > * >(argp1);
+  delete arg1;
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -3950,28 +4039,30 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_octra_dynarray_print(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_DynArrayDouble_push_back__SWIG_0(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
-  void (*arg2)(void *) = (void (*)(void *)) 0 ;
+  octra::DynArray< double > *arg1 = (octra::DynArray< double > *) 0 ;
+  double *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject *swig_obj[2] ;
+  double temp2 ;
+  double val2 ;
+  int ecode2 = 0 ;
   
   (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "octra_dynarray_print", 2, 2, swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra__DynArrayT_double_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_print" "', argument " "1"" of type '" "octra_dynarray *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DynArrayDouble_push_back" "', argument " "1"" of type '" "octra::DynArray< double > *""'"); 
   }
-  arg1 = (octra_dynarray *)(argp1);
-  {
-    int res = SWIG_ConvertFunctionPtr(swig_obj[1], (void**)(&arg2), SWIGTYPE_p_f_p_void__void);
-    if (!SWIG_IsOK(res)) {
-      SWIG_exception_fail(SWIG_ArgError(res), "in method '" "octra_dynarray_print" "', argument " "2"" of type '" "void (*)(void *)""'"); 
-    }
-  }
-  octra_dynarray_print(arg1,arg2);
+  arg1 = reinterpret_cast< octra::DynArray< double > * >(argp1);
+  ecode2 = SWIG_AsVal_double(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "DynArrayDouble_push_back" "', argument " "2"" of type '" "double""'");
+  } 
+  temp2 = static_cast< double >(val2);
+  arg2 = &temp2;
+  (arg1)->push_back((double const &)*arg2);
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -3979,9 +4070,117 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_octra_dynarray_size(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_DynArrayDouble_push_back__SWIG_1(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
+  octra::DynArray< double > *arg1 = (octra::DynArray< double > *) 0 ;
+  double *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::unique_ptr< double > rvrdeleter2 ;
+  
+  (void)self;
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra__DynArrayT_double_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DynArrayDouble_push_back" "', argument " "1"" of type '" "octra::DynArray< double > *""'"); 
+  }
+  arg1 = reinterpret_cast< octra::DynArray< double > * >(argp1);
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_double, SWIG_POINTER_RELEASE |  0 );
+  if (!SWIG_IsOK(res2)) {
+    if (res2 == SWIG_ERROR_RELEASE_NOT_OWNED) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "DynArrayDouble_push_back" "', cannot release ownership as memory is not owned for argument " "2"" of type '" "double &&""'");
+    } else {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "DynArrayDouble_push_back" "', argument " "2"" of type '" "double &&""'"); 
+    }
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DynArrayDouble_push_back" "', argument " "2"" of type '" "double &&""'"); 
+  }
+  arg2 = reinterpret_cast< double * >(argp2);
+  rvrdeleter2.reset(arg2);
+  (arg1)->push_back((double &&)*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DynArrayDouble_push_back(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args, "DynArrayDouble_push_back", 0, 2, argv))) SWIG_fail;
+  --argc;
+  if (argc == 2) {
+    int _v = 0;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_octra__DynArrayT_double_t, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_double, SWIG_POINTER_NO_NULL);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_DynArrayDouble_push_back__SWIG_1(self, argc, argv);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v = 0;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_octra__DynArrayT_double_t, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_DynArrayDouble_push_back__SWIG_0(self, argc, argv);
+      }
+    }
+  }
+  
+fail:
+  SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'DynArrayDouble_push_back'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    octra::DynArray< double >::push_back(double const &)\n"
+    "    octra::DynArray< double >::push_back(double &&)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_DynArrayDouble_clear(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  octra::DynArray< double > *arg1 = (octra::DynArray< double > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra__DynArrayT_double_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DynArrayDouble_clear" "', argument " "1"" of type '" "octra::DynArray< double > *""'"); 
+  }
+  arg1 = reinterpret_cast< octra::DynArray< double > * >(argp1);
+  (arg1)->clear();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DynArrayDouble_size(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  octra::DynArray< double > *arg1 = (octra::DynArray< double > *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject *swig_obj[1] ;
@@ -3990,140 +4189,230 @@ SWIGINTERN PyObject *_wrap_octra_dynarray_size(PyObject *self, PyObject *args) {
   (void)self;
   if (!args) SWIG_fail;
   swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra__DynArrayT_double_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_size" "', argument " "1"" of type '" "octra_dynarray *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DynArrayDouble_size" "', argument " "1"" of type '" "octra::DynArray< double > const *""'"); 
   }
-  arg1 = (octra_dynarray *)(argp1);
-  result = octra_dynarray_size(arg1);
-  resultobj = SWIG_From_size_t((size_t)(result));
+  arg1 = reinterpret_cast< octra::DynArray< double > * >(argp1);
+  result = ((octra::DynArray< double > const *)arg1)->size();
+  resultobj = SWIG_From_size_t(static_cast< size_t >(result));
   return resultobj;
 fail:
   return NULL;
 }
 
 
-SWIGINTERN PyObject *_wrap_print_int(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_DynArrayDouble__SWIG_1(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
-  void *arg1 = (void *) 0 ;
-  int res1 ;
-  PyObject *swig_obj[1] ;
-  
-  (void)self;
-  if (!args) SWIG_fail;
-  swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0],SWIG_as_voidptrptr(&arg1), 0, 0);
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "print_int" "', argument " "1"" of type '" "void *""'"); 
-  }
-  print_int(arg1);
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_print_double(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  void *arg1 = (void *) 0 ;
-  int res1 ;
-  PyObject *swig_obj[1] ;
-  
-  (void)self;
-  if (!args) SWIG_fail;
-  swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0],SWIG_as_voidptrptr(&arg1), 0, 0);
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "print_double" "', argument " "1"" of type '" "void *""'"); 
-  }
-  print_double(arg1);
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_octra_dynarray_clear(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
+  octra::DynArray< double > *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject *swig_obj[1] ;
+  octra::DynArray< double > *result = 0 ;
   
   (void)self;
-  if (!args) SWIG_fail;
-  swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_octra__DynArrayT_double_t,  0  | 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_clear" "', argument " "1"" of type '" "octra_dynarray *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_DynArrayDouble" "', argument " "1"" of type '" "octra::DynArray< double > const &""'"); 
   }
-  arg1 = (octra_dynarray *)(argp1);
-  octra_dynarray_clear(arg1);
-  resultobj = SWIG_Py_Void();
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_DynArrayDouble" "', argument " "1"" of type '" "octra::DynArray< double > const &""'"); 
+  }
+  arg1 = reinterpret_cast< octra::DynArray< double > * >(argp1);
+  result = (octra::DynArray< double > *)new octra::DynArray< double >((octra::DynArray< double > const &)*arg1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_octra__DynArrayT_double_t, SWIG_POINTER_NEW |  0 );
   return resultobj;
 fail:
   return NULL;
 }
 
 
-SWIGINTERN PyObject *_wrap_octra_dynarray_sort(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_DynArrayDouble__SWIG_2(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
-  octra_dynarray *arg1 = (octra_dynarray *) 0 ;
-  int (*arg2)(void const *,void const *) = (int (*)(void const *,void const *)) 0 ;
+  octra::DynArray< double > *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject *swig_obj[2] ;
+  std::unique_ptr< octra::DynArray< double > > rvrdeleter1 ;
+  octra::DynArray< double > *result = 0 ;
   
   (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "octra_dynarray_sort", 2, 2, swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_octra_dynarray, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_octra__DynArrayT_double_t, SWIG_POINTER_RELEASE |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "octra_dynarray_sort" "', argument " "1"" of type '" "octra_dynarray *""'"); 
-  }
-  arg1 = (octra_dynarray *)(argp1);
-  {
-    int res = SWIG_ConvertFunctionPtr(swig_obj[1], (void**)(&arg2), SWIGTYPE_p_f_p_q_const__void_p_q_const__void__int);
-    if (!SWIG_IsOK(res)) {
-      SWIG_exception_fail(SWIG_ArgError(res), "in method '" "octra_dynarray_sort" "', argument " "2"" of type '" "int (*)(void const *,void const *)""'"); 
+    if (res1 == SWIG_ERROR_RELEASE_NOT_OWNED) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_DynArrayDouble" "', cannot release ownership as memory is not owned for argument " "1"" of type '" "octra::DynArray< double > &&""'");
+    } else {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_DynArrayDouble" "', argument " "1"" of type '" "octra::DynArray< double > &&""'"); 
     }
   }
-  octra_dynarray_sort(arg1,arg2);
-  resultobj = SWIG_Py_Void();
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_DynArrayDouble" "', argument " "1"" of type '" "octra::DynArray< double > &&""'"); 
+  }
+  arg1 = reinterpret_cast< octra::DynArray< double > * >(argp1);
+  rvrdeleter1.reset(arg1);
+  result = (octra::DynArray< double > *)new octra::DynArray< double >((octra::DynArray< double > &&)*arg1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_octra__DynArrayT_double_t, SWIG_POINTER_NEW |  0 );
   return resultobj;
 fail:
   return NULL;
 }
 
 
+SWIGINTERN PyObject *_wrap_new_DynArrayDouble(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[2] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args, "new_DynArrayDouble", 0, 1, argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    int _v = 0;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_octra__DynArrayT_double_t, SWIG_POINTER_NO_NULL | 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_DynArrayDouble__SWIG_1(self, argc, argv);
+    }
+  }
+  if (argc == 1) {
+    int _v = 0;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_octra__DynArrayT_double_t, SWIG_POINTER_NO_NULL);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_DynArrayDouble__SWIG_2(self, argc, argv);
+    }
+  }
+  if (argc == 1) {
+    int _v = 0;
+    {
+      int res = SWIG_AsVal_size_t(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      return _wrap_new_DynArrayDouble__SWIG_0(self, argc, argv);
+    }
+  }
+  
+fail:
+  SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'new_DynArrayDouble'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    octra::DynArray< double >::DynArray(size_t)\n"
+    "    octra::DynArray< double >::DynArray(octra::DynArray< double > const &)\n"
+    "    octra::DynArray< double >::DynArray(octra::DynArray< double > &&)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap___lshift____SWIG_2(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  std::ostream *arg1 = 0 ;
+  octra::DynArray< double > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::ostream *result = 0 ;
+  
+  (void)self;
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_std__ostream,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__lshift__" "', argument " "1"" of type '" "std::ostream &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__lshift__" "', argument " "1"" of type '" "std::ostream &""'"); 
+  }
+  arg1 = reinterpret_cast< std::ostream * >(argp1);
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_octra__DynArrayT_double_t,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__lshift__" "', argument " "2"" of type '" "octra::DynArray< double > const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__lshift__" "', argument " "2"" of type '" "octra::DynArray< double > const &""'"); 
+  }
+  arg2 = reinterpret_cast< octra::DynArray< double > * >(argp2);
+  result = (std::ostream *) &operator <<(*arg1,(octra::DynArray< double > const &)*arg2);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__ostream, 0 |  0 );
+  return resultobj;
+fail:
+  if (PyErr_Occurred() && !PyErr_ExceptionMatches(PyExc_TypeError)) {
+    return NULL;
+  }
+  PyErr_Clear();
+  Py_INCREF(Py_NotImplemented);
+  return Py_NotImplemented;
+}
+
+
+SWIGINTERN PyObject *_wrap___lshift__(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args, "__lshift__", 0, 2, argv))) SWIG_fail;
+  --argc;
+  if (argc == 2) {
+    int _v = 0;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_std__ostream, SWIG_POINTER_NO_NULL);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_octra__DynArrayT_int_t, SWIG_POINTER_NO_NULL | 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap___lshift____SWIG_1(self, argc, argv);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v = 0;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_std__ostream, SWIG_POINTER_NO_NULL);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_octra__DynArrayT_double_t, SWIG_POINTER_NO_NULL | 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap___lshift____SWIG_2(self, argc, argv);
+      }
+    }
+  }
+  
+fail:
+  Py_INCREF(Py_NotImplemented);
+  return Py_NotImplemented;
+}
+
+
+SWIGINTERN PyObject *DynArrayDouble_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!SWIG_Python_UnpackTuple(args, "swigregister", 1, 1, &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_octra__DynArrayT_double_t, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *DynArrayDouble_swiginit(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  return SWIG_Python_InitShadowInstance(args);
+}
+
 static PyMethodDef SwigMethods[] = {
-	 { "octra_dynarray_data_set", _wrap_octra_dynarray_data_set, METH_VARARGS, NULL},
-	 { "octra_dynarray_data_get", _wrap_octra_dynarray_data_get, METH_O, NULL},
-	 { "octra_dynarray_size_set", _wrap_octra_dynarray_size_set, METH_VARARGS, NULL},
-	 { "octra_dynarray_size_get", _wrap_octra_dynarray_size_get, METH_O, NULL},
-	 { "octra_dynarray_capacity_set", _wrap_octra_dynarray_capacity_set, METH_VARARGS, NULL},
-	 { "octra_dynarray_capacity_get", _wrap_octra_dynarray_capacity_get, METH_O, NULL},
-	 { "octra_dynarray_elementSize_set", _wrap_octra_dynarray_elementSize_set, METH_VARARGS, NULL},
-	 { "octra_dynarray_elementSize_get", _wrap_octra_dynarray_elementSize_get, METH_O, NULL},
-	 { "new_octra_dynarray", _wrap_new_octra_dynarray, METH_NOARGS, NULL},
-	 { "delete_octra_dynarray", _wrap_delete_octra_dynarray, METH_O, NULL},
-	 { "octra_dynarray_swigregister", octra_dynarray_swigregister, METH_O, NULL},
-	 { "octra_dynarray_swiginit", octra_dynarray_swiginit, METH_VARARGS, NULL},
-	 { "octra_dynarray_alloc", _wrap_octra_dynarray_alloc, METH_VARARGS, NULL},
-	 { "octra_dynarray_reserve", _wrap_octra_dynarray_reserve, METH_VARARGS, NULL},
-	 { "octra_dynarray_push", _wrap_octra_dynarray_push, METH_VARARGS, NULL},
-	 { "octra_dynarray_insert", _wrap_octra_dynarray_insert, METH_VARARGS, NULL},
-	 { "octra_dynarray_remove", _wrap_octra_dynarray_remove, METH_VARARGS, NULL},
-	 { "octra_dynarray_get", _wrap_octra_dynarray_get, METH_VARARGS, NULL},
-	 { "octra_dynarray_set", _wrap_octra_dynarray_set, METH_VARARGS, NULL},
-	 { "octra_dynarray_free", _wrap_octra_dynarray_free, METH_O, NULL},
-	 { "octra_dynarray_print", _wrap_octra_dynarray_print, METH_VARARGS, NULL},
-	 { "octra_dynarray_size", _wrap_octra_dynarray_size, METH_O, NULL},
-	 { "print_int", _wrap_print_int, METH_O, NULL},
-	 { "print_double", _wrap_print_double, METH_O, NULL},
-	 { "octra_dynarray_clear", _wrap_octra_dynarray_clear, METH_O, NULL},
-	 { "octra_dynarray_sort", _wrap_octra_dynarray_sort, METH_VARARGS, NULL},
+	 { "delete_DynArrayInt", _wrap_delete_DynArrayInt, METH_O, NULL},
+	 { "DynArrayInt_push_back", _wrap_DynArrayInt_push_back, METH_VARARGS, NULL},
+	 { "DynArrayInt_clear", _wrap_DynArrayInt_clear, METH_O, NULL},
+	 { "DynArrayInt_size", _wrap_DynArrayInt_size, METH_O, NULL},
+	 { "new_DynArrayInt", _wrap_new_DynArrayInt, METH_VARARGS, NULL},
+	 { "DynArrayInt_swigregister", DynArrayInt_swigregister, METH_O, NULL},
+	 { "DynArrayInt_swiginit", DynArrayInt_swiginit, METH_VARARGS, NULL},
+	 { "delete_DynArrayDouble", _wrap_delete_DynArrayDouble, METH_O, NULL},
+	 { "DynArrayDouble_push_back", _wrap_DynArrayDouble_push_back, METH_VARARGS, NULL},
+	 { "DynArrayDouble_clear", _wrap_DynArrayDouble_clear, METH_O, NULL},
+	 { "DynArrayDouble_size", _wrap_DynArrayDouble_size, METH_O, NULL},
+	 { "new_DynArrayDouble", _wrap_new_DynArrayDouble, METH_VARARGS, NULL},
+	 { "__lshift__", _wrap___lshift__, METH_VARARGS, NULL},
+	 { "DynArrayDouble_swigregister", DynArrayDouble_swigregister, METH_O, NULL},
+	 { "DynArrayDouble_swiginit", DynArrayDouble_swiginit, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
@@ -4131,31 +4420,35 @@ static PyMethodDef SwigMethods[] = {
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_q_const__void_p_q_const__void__int = {"_p_f_p_q_const__void_p_q_const__void__int", "int (*)(void const *,void const *)", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_void__void = {"_p_f_p_void__void", "void (*)(void *)", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_octra_dynarray = {"_p_octra_dynarray", "octra_dynarray *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_octra__DynArrayT_double_t = {"_p_octra__DynArrayT_double_t", "octra::DynArray< double > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_octra__DynArrayT_int_t = {"_p_octra__DynArrayT_int_t", "octra::DynArray< int > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__ostream = {"_p_std__ostream", "std::ostream *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char,
-  &_swigt__p_f_p_q_const__void_p_q_const__void__int,
-  &_swigt__p_f_p_void__void,
-  &_swigt__p_octra_dynarray,
-  &_swigt__p_void,
+  &_swigt__p_double,
+  &_swigt__p_int,
+  &_swigt__p_octra__DynArrayT_double_t,
+  &_swigt__p_octra__DynArrayT_int_t,
+  &_swigt__p_std__ostream,
 };
 
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_q_const__void_p_q_const__void__int[] = {  {&_swigt__p_f_p_q_const__void_p_q_const__void__int, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_void__void[] = {  {&_swigt__p_f_p_void__void, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_octra_dynarray[] = {  {&_swigt__p_octra_dynarray, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_octra__DynArrayT_double_t[] = {  {&_swigt__p_octra__DynArrayT_double_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_octra__DynArrayT_int_t[] = {  {&_swigt__p_octra__DynArrayT_int_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__ostream[] = {  {&_swigt__p_std__ostream, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char,
-  _swigc__p_f_p_q_const__void_p_q_const__void__int,
-  _swigc__p_f_p_void__void,
-  _swigc__p_octra_dynarray,
-  _swigc__p_void,
+  _swigc__p_double,
+  _swigc__p_int,
+  _swigc__p_octra__DynArrayT_double_t,
+  _swigc__p_octra__DynArrayT_int_t,
+  _swigc__p_std__ostream,
 };
 
 

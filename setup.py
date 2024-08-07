@@ -1,5 +1,6 @@
 ### WARNING: This file is generated from octra. Do not edit. ###
 
+# TODO: place above warning in cmake build
 # File : setup.py
 
 from distutils.core import Extension, setup
@@ -35,7 +36,12 @@ version = "0.1"
 # required to compile this
 ext_modules = Extension(
     name="_pyoctra",
-    sources=["pyoctra/swig_src/pyoctra.i", "pyoctra/octra/c/dynarray.c"],
+    swig_opts=["-c++"],
+    sources=[
+        "pyoctra/swig_src/pyoctra.i",
+        "pyoctra/octra/c/dynarray.c",
+        # "pyoctra/octra/cxx/dynarray.cxx",
+    ],
 )
 
 setup(

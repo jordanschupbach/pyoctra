@@ -26,7 +26,7 @@
 #pragma once
 
 extern "C" {
-#include <octra/c/dynarray.h>
+#include "../c/dynarray.h"
 }
 
 #include <iostream>
@@ -109,7 +109,7 @@ template<typename T>
 T DynArray<T>::operator[](size_t index) const {
   if (index < size()) {
     auto elmt = octra_dynarray_get(_data, index);
-    return *(reinterpret_cast<T*>(elmt));
+    return *((T*)(elmt));
   }
   throw std::out_of_range("Index out of range");
 }
@@ -121,13 +121,13 @@ size_t DynArray<T>::size() const {
 
 template<typename T>
 void DynArray<T>::push_back(const T& elmt) {
-  octra_dynarray_push(_data, reinterpret_cast<void*>(&elmt));
+  octra_dynarray_push(_data, (void*)(&elmt));
 }
 
 template<typename T>
 void DynArray<T>::push_back(T&& elmt) {
   // TODO: need to invalidate pointer...?
-  octra_dynarray_push(_data, reinterpret_cast<void*>(&elmt));
+  octra_dynarray_push(_data, (void*)(&elmt));
 }
 
 template<typename T>
