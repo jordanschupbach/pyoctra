@@ -1,2 +1,2 @@
 include README.md
-recursive-include pyoctra/swig_src _pyoctra*
+recursive-include pyoctra/swig_src *

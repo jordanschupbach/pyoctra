@@ -5,7 +5,7 @@ The pyOctra library.
 
 __name__ = "pyoctra"
 
-from .swig_src.pyoctra import *
+from .swig_src import pyoctra as octra
 
 
 # import importlib

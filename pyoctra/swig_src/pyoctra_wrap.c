@@ -3188,7 +3188,7 @@ static swig_module_info swig_module = {swig_types, 5, 0, 0, 0, 0};
 #define SWIG_as_voidptrptr(a) ((void)SWIG_as_voidptr(*a),(void**)(a)) 
 
 
-#include "octra/dynarray.h"
+  #include "../../octra/c/dynarray.h"
 
 
 SWIGINTERN int
