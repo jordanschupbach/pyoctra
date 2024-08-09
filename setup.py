@@ -37,12 +37,14 @@ version = "0.1"
 ext_modules = Extension(
     name="_pyoctra",
     swig_opts=["-c++"],
-    language="c++",
+    include_dirs=["pyoctra/octra/cxx/dynarray.hpp",  ""],
     sources=[
+        
         "pyoctra/octra/c/dynarray.c",
         "pyoctra/swig_src/pyoctra.i",  # all just in the header... TODO: figure out how to separate
         # "pyoctra/octra/cxx/dynarray.cxx",
     ],
+    extra_link_args=["-lpython"],
 )
 
 setup(
