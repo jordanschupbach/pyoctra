@@ -37,9 +37,10 @@ version = "0.1"
 ext_modules = Extension(
     name="_pyoctra",
     swig_opts=["-c++"],
+    language="c++",
     sources=[
-        "pyoctra/swig_src/pyoctra.i",
         "pyoctra/octra/c/dynarray.c",
+        "pyoctra/swig_src/pyoctra.i",  # all just in the header... TODO: figure out how to separate
         # "pyoctra/octra/cxx/dynarray.cxx",
     ],
 )
