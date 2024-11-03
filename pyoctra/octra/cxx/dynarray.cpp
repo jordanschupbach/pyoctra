@@ -23,64 +23,9 @@
 //
 // For more information, please refer to <http://unlicense.org/>
 
-#pragma once
-
-// #include <bits/types/struct_FILE.h>
-// #include <cstddef>
-#include <vector>
-
-extern "C" {
-#include "octra/c/dynarray.h"
-}
-
-#include <iostream>
-#include <string>
+#include "octra/cxx/dynarray.hpp"
 
 namespace octra {
-
-template <typename T> class DynArray {
-public:
-  DynArray();
-  explicit DynArray(size_t n);
-  virtual ~DynArray();
-  void reserve(size_t capacity);
-  void push_back(const T &elmt);
-  void push_back(T &&elmt);
-  // dm_dynarray_t *data() const;
-  void clear();
-  size_t capacity() const;
-  size_t size() const;
-  T &operator[](size_t index);
-  T operator[](size_t index) const;
-  std::string to_string() const;
-  void print();
-  // DynArray(const DynArray<T> &other);
-  // DynArray(DynArray<T> &&other);
-  std::vector<T> to_vec() const;
-
-  // // Copy assignment operator (was commented out)
-  // DynArray<T> &operator=(const DynArray<T> other) {
-  //   std::swap(*this, other);
-  //   return *this;
-  // }
-
-  // // Move assignment operator
-  // DynArray<T> &operator=(DynArray<T> &&other) noexcept {
-  //   std::swap(_data, other._data);
-  //   return *this;
-  // }
-
-  // explicit DynArray(dm_dynarray *data) : _data(data) {}
-
-  // friend std::ostream &operator<<(std::ostream &os, const DynArray<T> &obj) {
-  //   os << obj.to_string();
-  //   return os;
-  // }
-
-private:
-  octra_dynarray_t *_data;
-};
-
 
 // template <typename T> dm_dynarray *DynArray<T>::data() const { return _data; }
 
@@ -218,9 +163,4 @@ template <typename T> std::string DynArray<T>::to_string() const {
 
 
 
-
-
-
-
-
-} // namespace octra
+}

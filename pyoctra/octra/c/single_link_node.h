@@ -23,7 +23,30 @@
 //
 // For more information, please refer to <http://unlicense.org/>
 
-#include <octra/cxx/dynarray.hpp>
-#include <stdexcept>
+#pragma once
 
-namespace octra {} // namespace octra
+#include <stdlib.h>
+
+struct octra_sl_node {
+  void*                 data;
+  size_t                data_size;
+  struct octra_sl_node* next;
+};
+
+typedef struct octra_sl_node octra_sl_node_t;
+
+octra_sl_node_t* octra_sl_node_create(void* data, size_t data_size);
+
+void octra_sl_node_destroy(octra_sl_node_t* node);
+
+void octra_sl_node_set_next(octra_sl_node_t* node, octra_sl_node_t* next);
+
+octra_sl_node_t* octra_sl_node_get_next(octra_sl_node_t* node);
+
+void octra_sl_node_set_data(octra_sl_node_t* node, void* data, size_t data_size);
+
+void* octra_sl_node_get_data(octra_sl_node_t* node);
+
+size_t octra_sl_node_get_data_size(octra_sl_node_t* node);
+
+void octra_sl_node_set_data_size(octra_sl_node_t* node, size_t data_size);
