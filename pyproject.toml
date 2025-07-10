@@ -6,13 +6,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyoctra"
-version = "0.0.1" # TODO: get from cmake
+version = "0.0.1"
 
 [options]
 package_dir = "pyoctra/octra"
 
 [tool.setuptools]
 ext-modules = [
-  {name = "pyoctra._octra", sources = [ 'octrajs/octra/c/dynarray.c', 'octrajs/octra/c/linked_list.c', 'octrajs/octra/c/octra_io.c', 'octrajs/octra/c/single_link_node.c',  'octrajs/octra/cxx/circle.cpp', 'octrajs/octra/cxx/dynarray.cpp',  "pyoctra/octra/octra_wrap.cpp"], include-dirs = ["pyoctra/"]},
+  {name = "pyoctra._octra", sources = [ 'pyoctra/octra/c/dynarray.c', 'pyoctra/octra/c/linked_list.c', 'pyoctra/octra/c/octra_io.c', 'pyoctra/octra/c/single_link_node.c',  'pyoctra/octra/cxx/circle.cpp', 'pyoctra/octra/cxx/dynarray.cpp',  "pyoctra/octra/octra_wrap.cpp"], include-dirs = ["pyoctra/"]},
 ]
 
