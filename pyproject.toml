@@ -13,6 +13,6 @@ package_dir = "pyoctra/octra"
 
 [tool.setuptools]
 ext-modules = [
-  {name = "pyoctra._octra", sources = [ 'pyoctra/octra/c/dynarray.c', 'pyoctra/octra/c/linked_list.c', 'pyoctra/octra/c/octra_io.c', 'pyoctra/octra/c/single_link_node.c',  'pyoctra/octra/cxx/circle.cpp', 'pyoctra/octra/cxx/dynarray.cpp',  "pyoctra/octra/octra_wrap.cpp"], include-dirs = ["pyoctra/"]},
+  {name = "pyoctra._octra", sources = [ 'src/pyoctra/octra/c/dynarray.c', 'src/pyoctra/octra/c/linked_list.c', 'src/pyoctra/octra/c/octra_io.c', 'src/pyoctra/octra/c/single_link_node.c',  'src/pyoctra/octra/cxx/circle.cpp', 'src/pyoctra/octra/cxx/dynarray.cpp',  "src/pyoctra/octra/octra_wrap.cpp"], include-dirs = ["src/pyoctra/"]},
 ]
 

@@ -1,4 +1,3 @@
-
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
@@ -13,41 +12,38 @@
     flake-utils.lib.eachDefaultSystem (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
+        pythonPkgs = pkgs.python3.pkgs;
+        pyoctra = import ./pyoctra.nix {
+          inherit (pkgs) lib stdenv fetchPypi python;
+          inherit (pythonPkgs) buildPythonPackage setuptools;
+        };
       in {
-        devShells.aiestate = pkgs.mkShell {
-
-          buildInputs = [ 
-
+        devShells.octra = pkgs.mkShell {
+          buildInputs = [
             pkgs.gcc
             pkgs.git
             pkgs.gnumake
             pkgs.just
-            pkgs.just 
             pkgs.lapack
-            pkgs.libxml2 
+            pkgs.libxml2
             pkgs.poetry
             pkgs.python313
             pkgs.python313Packages.pip
-
           ];
+
+          packages = [pyoctra];
 
           shellHook = ''
             python -m venv .venv
             source .venv/bin/activate
             pip install .
           '';
-
         };
 
-        devShell = self.devShells.${system}.aiestate;
-
+        devShell = self.devShells.${system}.octra;
       }
     );
 }
-
-
-
-
 # pkgs.mkShell {
 #             # The Nix packages provided in the environment
 #             packages = [
@@ -61,3 +57,4 @@
 #               pip install -r requirements.txt
 #             '';
 #
+

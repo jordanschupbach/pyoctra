@@ -1,3 +1,2 @@
-
 all:
-  nix develop . --command bash -c "pip install .; python"
+    nix develop . --command bash -c "python"

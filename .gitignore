@@ -3,3 +3,4 @@ _pyoctra*
 pyoctra.egg-info
 build
 __pycache__
+.direnv
