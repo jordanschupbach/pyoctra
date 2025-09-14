@@ -29,6 +29,7 @@
             pkgs.poetry
             pkgs.python313
             pkgs.python313Packages.pip
+            pkgs.python313Packages.numpy
           ];
 
           packages = [pyoctra];

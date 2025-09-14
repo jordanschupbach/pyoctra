@@ -5,6 +5,8 @@ import numpy as np
 import pyoctra
 from pyoctra import octra
 
+x = np.random.rand(100)
+
 dir(octra)
 
 dir(pyoctra)
@@ -30,7 +32,7 @@ for i in range(x.size()):
     x[i] = random.random()
 
 # Do
-octra::fill_runif(x, 0.0, 1.0)
+# octra.fill_runif(x, 0.0, 1.0)
 
 for i in range(x.size()):
     print(x[i])
